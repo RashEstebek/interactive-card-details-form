@@ -23,8 +23,8 @@
   <div class="card-purple" use:motion>
 
     <picture>
-      <source srcset="/desktop/desktop-card-purple-rounds.svg" media="(min-width: 75em)">
-      <img src="/mobile/mobile-card-purple-rounds.svg" alt="Rounds" />
+      <source srcset="/desktop-card-purple-rounds.svg" media="(min-width: 75em)">
+      <img src="/mobile-card-purple-rounds.svg" alt="Rounds" />
     </picture>
 
     <p class="card-purple__number">{formatCardNumber(cardNumber || "0000000000000000")}</p>
