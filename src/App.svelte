@@ -1,41 +1,49 @@
 <script lang="ts">
+    import Button from "./lib/Button/index.svelte"
+    import Success from "./lib/Success/index.svelte";
+    import FormInput from "./lib/FormInput";
+    import CardFront from "./lib/CardFront"
     import { onMount } from 'svelte';
 
-    let cardholderName = 'Jane Appleseed';
-    let cardNumber = '0000 0000 0000 0000';
-    let expMonth = '00';
-    let expYear = '00';
-    let cvc = '000';
-    let showSuccessMessage = false;
+    import { createForm } from "felte";
+    import { validator } from "@felte/validator-zod";
+    import { reporter, ValidationMessage } from "@felte/reporter-svelte";
+    import { z } from "zod";
+    import { schema } from "./lib/FormInput/Form.schema";
+    import { formSubmittedStore, formInputs } from "./lib/store/formStatus";
 
-    let card = {
-        cardholderName: 'Jane Appleseed',
-        cardNumber: '0000 0000 0000 0000',
-        expDate: '00/00',
-        cvc: '000',
-    };
+    let {
+        cardholderName,
+        cardNumber,
+        cardExpireDateMonth,
+        cardExpireDateYear,
+        cvcCode,
+    } = $formInputs;
 
-    function updateCardDetails() {
-        card.cardholderName = cardholderName;
-        card.cardNumber = maskCardNumber(cardNumber);
-        card.expDate = `${expMonth}/${expYear}`;
-        card.cvc = cvc;
-    }
+    type FormSchema = z.infer<typeof schema>;
 
-    function maskCardNumber(number: string) {
-        // Implement your logic to mask the card number as needed
-        return '0000 0000 0000 ' + number.slice(-4);
-    }
-
-    function confirmDetails() {
-        // You might want to perform additional validation here before showing the success message
-        updateCardDetails();
-        showSuccessMessage = true;
-    }
-
-    onMount(() => {
-        updateCardDetails();
+    const { form, errors, isValid, reset } = createForm<FormSchema>({    
+        onSubmit(values, context) {
+            console.log(values)
+        },
+        onSuccess(values) {
+            reset();      
+            $formSubmittedStore = true;
+        },
+        onError(err, context) {
+            console.log("onError", { err, context });
+        },
+        extend: [validator({ schema }), reporter],
     });
+
+    const handleSuccessPage = () => {
+        $formSubmittedStore = false;
+        cardholderName = "";
+        cardNumber = '';
+        cardExpireDateMonth = '';
+        cardExpireDateYear = '';
+        cvcCode = '';
+    };
 </script>
 
 <main class="main">
@@ -46,76 +54,139 @@
             <img src="./public/mobile/mobile-card-gray.svg" alt="Gray card" />
         </picture>
 
-        <div class="card-purple">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="54"
-                height="30"
-                viewBox="0 0 54 30"
-                fill="none"
-                >
-                <ellipse cx="15.0932" cy="15" rx="15.0932" ry="15" fill="white" />
-                <path
-                    d="M53.5 15C53.5 18.4489 50.6859 21.25 47.2081 21.25C43.7302 21.25 40.9161 18.4489 40.9161 15C40.9161 11.5511 43.7302 8.75 47.2081 8.75C50.6859 8.75 53.5 11.5511 53.5 15Z"
-                    stroke="white"
-                />
-            </svg>
-
-            <p class="card-purple__number">{card.cardNumber}</p>
-
-            <div class="card-purple__name-cvc">
-                <p>{card.cardholderName}</p>
-                <p>{card.expDate}</p>
-            </div>
-        </div>
+        <CardFront 
+            cardName={cardholderName}
+            {cardNumber}
+            expireMonth={cardExpireDateMonth}
+            expireYear={cardExpireDateYear}
+        />
     </section>
 
-    <section class="side-form">
-        {#if !showSuccessMessage}
-          <form on:submit|preventDefault={confirmDetails}>
+<section class="side-form">
+    {#if $formSubmittedStore}
+        <Success handleClick={handleSuccessPage} />
+    {:else}
+        <form use:form class="form">
             <div class="form-name-number">
+                <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label>
-                    Cardholder Name: <br>
-                    <input type="text" bind:value={cardholderName} placeholder="e.g. Jane Appleseed" />
+                    Cardholder Name: 
+                    <div>
+                        <FormInput
+                            id="cardholder-name"
+                            bind:value={cardholderName}
+                            name="cardholderName"
+                            placeholder="e.g. Jane Appleseed"
+                            maxlength={27}
+                            error={!!$errors.cardholderName}
+                        />
+                        <ValidationMessage for="cardholderName" let:messages={message}>
+                            <ul class="form-message-error">
+                                {#if message}
+                                {#each message as error}<li>{error}</li>{/each}
+                                {/if}
+                            </ul>
+                        </ValidationMessage>
+                    </div>  
                 </label>
 
+                <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label>
-                    Card Number: <br>
-                    <input type="text" bind:value={cardNumber} placeholder="e.g. 1234 5678 9123 0000" />
+                    Card Number:
+                    <div>
+                        <FormInput
+                            id="card-number"
+                            placeholder="e.g. 1234 5678 9123 0000"
+                            bind:value={cardNumber}
+                            maxlength={16}
+                            name="cardNumber"
+                            error={!!$errors.cardNumber}
+                        />
+                        <ValidationMessage for="cardNumber" let:messages={message}>
+                            <ul class="form-message-error">
+                                {#if message}
+                                {#each message as error}<li>{error}</li>{/each}
+                                {/if}
+                            </ul>
+                        </ValidationMessage>
+                    </div>
                 </label>
             </div>
-            
+
             <div class="form-date-cvc">
+                <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label>
                     Exp. Date (MM/YY) &nbsp; CVC <br>
-                    <div>
-                        <input type="text" bind:value={expMonth} placeholder="MM" />
-                        <input type="text" bind:value={expYear} placeholder="YY" />
-                        <input type="text" bind:value={cvc} placeholder="e.g. 123" />
+                    <div class="form-date-cvc-inputs">
+                        <FormInput
+                            name="cardExpireDateMonth"
+                            id="expire-date-mm"
+                            placeholder="MM"
+                            bind:value={cardExpireDateMonth}
+                            maxlength={2}
+                            error={!!$errors.cardExpireDateMonth}
+                        />
+
+                        <FormInput
+                            name="cardExpireDateYear"
+                            id="expire-date-yy"
+                            placeholder="YY"
+                            bind:value={cardExpireDateYear}
+                            maxlength={2}
+                            error={!!$errors.cardExpireDateYear}
+                        />
+                        
+                        <FormInput
+                            id="cvc"
+                            placeholder="e.g. 123"
+                            bind:value={cvcCode}
+                            name="cvcCode"
+                            error={!!$errors.cvcCode}
+                            maxlength={3}
+                        />
+                    </div>
+                    <div class="form-date-cvc-uls">    
+                        <ValidationMessage
+                            for="cardExpireDateMonth"
+                            let:messages={message}
+                        >
+                            <ul class="form-message-error">
+                            {#if message}
+                                {#each message as error}<li>{error}</li>{/each}
+                            {/if}
+                            </ul>
+                        </ValidationMessage>
+
+                        <ValidationMessage
+                            for="cardExpireDateYear"
+                            let:messages={message}
+                        >
+                            <ul class="form-message-error">
+                            {#if message}
+                                {#each message as error}<li>{error}</li>{/each}
+                            {/if}
+                            </ul>
+                        </ValidationMessage>
+
+                        <ValidationMessage for="cvcCode" let:messages={message}>
+                            <ul class="form-message-error">
+                            {#if message}
+                                {#each message as error}<li>{error}</li>{/each}
+                            {/if}
+                            </ul>
+                        </ValidationMessage>          
                     </div>
                 </label>      
             </div>
-            
-            <button class="button" type="submit">Confirm</button>
-          </form>
-        {:else}
-          <div class="success-message">
-            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="40" fill="url(#paint0_linear_0_524)"/>
-                <path d="M28 39.9199L36.0801 48L52.0801 32" stroke="white" stroke-width="3"/>
-                <defs>
-                  <linearGradient id="paint0_linear_0_524" x1="-23.0143" y1="11.5071" x2="1.03143e-06" y2="91.5071" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#6348FE"/>
-                    <stop offset="1" stop-color="#610595"/>
-                  </linearGradient>
-                </defs>
-            </svg>
-            <p class="congratulations">THANK YOU!</p>
-            <p class="explanation">We’ve added your card details.</p>
-            <button class="button" type="submit">Continue</button>
-          </div>
-        {/if}
-      </section>
+
+            <Button
+                variant="primary"
+                disabled={!$isValid}
+                type="submit"
+                on:submit={() => console.log("submit")}>Confirm</Button>
+        </form>
+    {/if}
+</section>
 </main>
 
 <style>
@@ -188,14 +259,36 @@
             border: 1px solid #DFDEE0;
         }
 
+        & input:focus {
+            border-radius: 8px;
+            border: 1px solid var(--border-input-color);
+        }
+
+        & .form-input-error {
+            border-color: var(--border-input-error);
+        }
+
+        & .form-message-error {
+            margin-top: 0.375rem;
+            font-size: 0.625rem;
+            line-height: normal;
+            letter-spacing: normal;
+            color: var(--text-error-color);
+            text-transform: none;
+        }
+
         & .form-name-number {
             display: flex;
             flex-direction: column;
         }
 
+        & .form-name-number div {
+            margin-top: 0.5625rem;
+            margin-bottom: 1.25rem;
+        }
+
         & .form-name-number input {
             padding: 0.6875rem 0 0.6875rem 1rem;
-            margin: 0.5625rem 0 1.25rem 0;
             min-width: 94%;
         }
 
@@ -203,21 +296,34 @@
             margin-bottom: 1.75rem;
         }
 
-        & .form-date-cvc div {
+        & .form-date-cvc-inputs {
             display: flex;
-            gap: 0.5625rem;
+            justify-content: space-between;
+            gap: 0.1rem;
         }
 
-        & .form-date-cvc input:not(:last-child) {
+        & .form-date-cvc-uls {
+            display: flex;
+        }
+
+        & 
+        .form-date-cvc-uls ul:first-child,
+        .form-date-cvc-uls ul:nth-child(2) {
+            flex: 0 0 23.5%;
+        }
+
+        & .form-date-cvc-uls ul:last-child {
+            flex: 0 0 53%;
+        }
+
+        & .form-date-cvc input {
             margin-top: 0.5625rem;
             padding: 0.6875rem 0.875rem 0.6875rem 1rem;
-            max-width: 2.625rem;
+            max-width: 2.2rem;
         }
 
         & .form-date-cvc input:last-child {
-            margin-top: 0.5625rem;
-            padding: 0.6875rem 5.125rem 0.6875rem 1rem;
-            min-width: 15%;
+            max-width: 9rem;
         }
 
         & .button {

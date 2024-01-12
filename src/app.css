@@ -4,7 +4,10 @@
     --text-primary-color: #FFF;
     --text-secondary-color: #21092F;
     --text-explanation-color: rgba(143, 134, 148, 1);
+    --text-error-color: #FF5050;
     --bg-button-color: #21092F;
+    --border-input-color: #6348FE;
+    --border-input-error: #FF5050;
   }
 
 body {
