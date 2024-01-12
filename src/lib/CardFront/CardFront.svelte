@@ -21,19 +21,11 @@
   transition={{ duration: 0.5 }}
 >
   <div class="card-purple" use:motion>
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="54"
-        height="30"
-        viewBox="0 0 54 30"
-        fill="none"
-        >
-        <ellipse cx="15.0932" cy="15" rx="15.0932" ry="15" fill="white" />
-        <path
-            d="M53.5 15C53.5 18.4489 50.6859 21.25 47.2081 21.25C43.7302 21.25 40.9161 18.4489 40.9161 15C40.9161 11.5511 43.7302 8.75 47.2081 8.75C50.6859 8.75 53.5 11.5511 53.5 15Z"
-            stroke="white"
-        />
-    </svg>
+
+    <picture>
+      <source srcset="./public/desktop/desktop-card-purple-rounds.svg" media="(min-width: 75em)">
+      <img src="./public/mobile/mobile-card-purple-rounds.svg" alt="Rounds" />
+    </picture>
 
     <p class="card-purple__number">{formatCardNumber(cardNumber || "0000000000000000")}</p>
 

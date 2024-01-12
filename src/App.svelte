@@ -51,6 +51,7 @@
 
     <section class="center-cards">
         <picture class="card-gray">
+            <source srcset="./public/desktop/desktop-card-gray.svg" media="(min-width: 75em)">
             <img src="./public/mobile/mobile-card-gray.svg" alt="Gray card" />
         </picture>
 
@@ -62,136 +63,147 @@
         />
     </section>
 
-<section class="side-form">
-    {#if $formSubmittedStore}
-        <Success handleClick={handleSuccessPage} />
-    {:else}
-        <form use:form class="form">
-            <div class="form-name-number">
-                <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label>
-                    Cardholder Name: 
-                    <div>
-                        <FormInput
-                            id="cardholder-name"
-                            bind:value={cardholderName}
-                            name="cardholderName"
-                            placeholder="e.g. Jane Appleseed"
-                            maxlength={27}
-                            error={!!$errors.cardholderName}
-                        />
-                        <ValidationMessage for="cardholderName" let:messages={message}>
-                            <ul class="form-message-error">
-                                {#if message}
-                                {#each message as error}<li>{error}</li>{/each}
-                                {/if}
-                            </ul>
-                        </ValidationMessage>
-                    </div>  
-                </label>
+    <section class="side-form">
+        {#if $formSubmittedStore}
+            <Success handleClick={handleSuccessPage} />
+        {:else}
+            <form use:form class="form">
+                <div class="form-name-number">
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label>
+                        Cardholder Name: 
+                        <div>
+                            <FormInput
+                                id="cardholder-name"
+                                bind:value={cardholderName}
+                                name="cardholderName"
+                                placeholder="e.g. Jane Appleseed"
+                                maxlength={27}
+                                error={!!$errors.cardholderName}
+                            />
+                            <ValidationMessage for="cardholderName" let:messages={message}>
+                                <ul class="form-message-error">
+                                    {#if message}
+                                    {#each message as error}<li>{error}</li>{/each}
+                                    {/if}
+                                </ul>
+                            </ValidationMessage>
+                        </div>  
+                    </label>
 
-                <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label>
-                    Card Number:
-                    <div>
-                        <FormInput
-                            id="card-number"
-                            placeholder="e.g. 1234 5678 9123 0000"
-                            bind:value={cardNumber}
-                            maxlength={16}
-                            name="cardNumber"
-                            error={!!$errors.cardNumber}
-                        />
-                        <ValidationMessage for="cardNumber" let:messages={message}>
-                            <ul class="form-message-error">
-                                {#if message}
-                                {#each message as error}<li>{error}</li>{/each}
-                                {/if}
-                            </ul>
-                        </ValidationMessage>
-                    </div>
-                </label>
-            </div>
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label>
+                        Card Number:
+                        <div>
+                            <FormInput
+                                id="card-number"
+                                placeholder="e.g. 1234 5678 9123 0000"
+                                bind:value={cardNumber}
+                                maxlength={16}
+                                name="cardNumber"
+                                error={!!$errors.cardNumber}
+                            />
+                            <ValidationMessage for="cardNumber" let:messages={message}>
+                                <ul class="form-message-error">
+                                    {#if message}
+                                    {#each message as error}<li>{error}</li>{/each}
+                                    {/if}
+                                </ul>
+                            </ValidationMessage>
+                        </div>
+                    </label>
+                </div>
 
-            <div class="form-date-cvc">
-                <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label>
-                    Exp. Date (MM/YY) &nbsp; CVC <br>
-                    <div class="form-date-cvc-inputs">
-                        <FormInput
-                            name="cardExpireDateMonth"
-                            id="expire-date-mm"
-                            placeholder="MM"
-                            bind:value={cardExpireDateMonth}
-                            maxlength={2}
-                            error={!!$errors.cardExpireDateMonth}
-                        />
+                <div class="form-date-cvc">
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label>
+                        Exp. Date (MM/YY) &nbsp; CVC
+                        <div class="form-date-cvc-flex">
+                            <div>
+                                <FormInput
+                                name="cardExpireDateMonth"
+                                id="expire-date-mm"
+                                placeholder="MM"
+                                bind:value={cardExpireDateMonth}
+                                maxlength={2}
+                                error={!!$errors.cardExpireDateMonth}
+                                />
+        
+                                <ValidationMessage
+                                    for="cardExpireDateMonth"
+                                    let:messages={message}
+                                >
+                                    <ul class="form-message-error">
+                                    {#if message}
+                                        {#each message as error}<li>{error}</li>{/each}
+                                    {/if}
+                                    </ul>
+                                </ValidationMessage>
+                            </div>
+        
+                            <div>
+                                <FormInput
+                                name="cardExpireDateYear"
+                                id="expire-date-yy"
+                                placeholder="YY"
+                                bind:value={cardExpireDateYear}
+                                maxlength={2}
+                                error={!!$errors.cardExpireDateYear}
+                                />
+        
+                                <ValidationMessage
+                                    for="cardExpireDateYear"
+                                    let:messages={message}
+                                >
+                                    <ul class="form-message-error">
+                                    {#if message}
+                                        {#each message as error}<li>{error}</li>{/each}
+                                    {/if}
+                                    </ul>
+                                </ValidationMessage>
+                            </div>
+        
+                            <div>
+                                <FormInput
+                                    id="cvc"
+                                    placeholder="e.g. 123"
+                                    bind:value={cvcCode}
+                                    name="cvcCode"
+                                    error={!!$errors.cvcCode}
+                                    maxlength={3}
+                                />
+        
+                                <ValidationMessage for="cvcCode" let:messages={message}>
+                                    <ul class="form-message-error">
+                                    {#if message}
+                                        {#each message as error}<li>{error}</li>{/each}
+                                    {/if}
+                                    </ul>
+                                </ValidationMessage>          
+                            </div>
+                        </div>
+                    </label>
+                </div>
 
-                        <FormInput
-                            name="cardExpireDateYear"
-                            id="expire-date-yy"
-                            placeholder="YY"
-                            bind:value={cardExpireDateYear}
-                            maxlength={2}
-                            error={!!$errors.cardExpireDateYear}
-                        />
-                        
-                        <FormInput
-                            id="cvc"
-                            placeholder="e.g. 123"
-                            bind:value={cvcCode}
-                            name="cvcCode"
-                            error={!!$errors.cvcCode}
-                            maxlength={3}
-                        />
-                    </div>
-                    <div class="form-date-cvc-uls">    
-                        <ValidationMessage
-                            for="cardExpireDateMonth"
-                            let:messages={message}
-                        >
-                            <ul class="form-message-error">
-                            {#if message}
-                                {#each message as error}<li>{error}</li>{/each}
-                            {/if}
-                            </ul>
-                        </ValidationMessage>
-
-                        <ValidationMessage
-                            for="cardExpireDateYear"
-                            let:messages={message}
-                        >
-                            <ul class="form-message-error">
-                            {#if message}
-                                {#each message as error}<li>{error}</li>{/each}
-                            {/if}
-                            </ul>
-                        </ValidationMessage>
-
-                        <ValidationMessage for="cvcCode" let:messages={message}>
-                            <ul class="form-message-error">
-                            {#if message}
-                                {#each message as error}<li>{error}</li>{/each}
-                            {/if}
-                            </ul>
-                        </ValidationMessage>          
-                    </div>
-                </label>      
-            </div>
-
-            <Button
-                variant="primary"
-                disabled={!$isValid}
-                type="submit"
-                on:submit={() => console.log("submit")}>Confirm</Button>
-        </form>
-    {/if}
-</section>
+                <Button
+                    variant="primary"
+                    disabled={!$isValid}
+                    type="submit"
+                    on:submit={() => console.log("submit")}>Confirm</Button>
+            </form>
+        {/if}
+    </section>
 </main>
 
 <style>
     .main {
         position: relative;
+
+        @media (min-width: 75em) {
+            position: relative;
+            display: flex;
+            height: 100%;
+        }
     }
 
     .side-background {
@@ -200,6 +212,15 @@
         background-image: url("../public/mobile/mobile-background-colors.svg");
         background-size: cover;
         background-position: center;
+
+        @media (min-width: 75em) {
+            min-width: 30.1875rem;
+            background-color: var(----bg-aside-color);
+            background-image: url("../public/desktop/desktop-background-colors.svg");
+            background-size: cover;
+            background-position: center;
+        }
+        
     }
 
     .center-cards {
@@ -207,7 +228,6 @@
         top: 0%;
         left: 50%;
         transform: translate(-50%, 7.5%);
-    
 
         & .card-gray {
             margin-right: -1.78125rem;
@@ -241,6 +261,41 @@
             margin-top: 1.0625rem;
             font-size: 0.5625rem;
         }
+
+        @media (min-width: 75em) {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            transform: translate(40%, 40%);
+
+            & .card-gray {
+                position: absolute;
+                transform: translate(10%, 130%);
+            }
+
+            & .card-purple {
+                margin-top: 1.5rem;
+                padding: 1.875rem;
+                min-width: 24.1875rem;
+                border-radius: 0.625rem;
+                background: url("../public/desktop/desktop-card-purple-background.svg"), var(--bg-card-color);
+                background-repeat: no-repeat;
+                background-position: 100% 0%;
+            }
+
+            & .card-purple__number {
+                font-size: 1.75rem;
+                margin-top: 4rem;
+                letter-spacing: 0.213875rem;
+            }
+
+            & .card-purple__name-cvc {
+                margin-top: 1.59375rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        
     }
 
     .side-form {
@@ -253,6 +308,16 @@
         letter-spacing: 0.125rem;
         font-size: 0.75rem;
         max-width: 20.45rem;
+
+        @media (min-width: 75em) {
+            margin: auto;
+            padding: 0 1.5rem 2.8125rem 1.5rem;
+            text-transform: uppercase;
+            line-height: normal;
+            letter-spacing: 0.125rem;
+            font-size: 0.75rem;
+            max-width: 20.45rem;
+        }
 
         & input {
             border-radius: 8px;
@@ -270,7 +335,7 @@
 
         & .form-message-error {
             margin-top: 0.375rem;
-            font-size: 0.625rem;
+            font-size: 0.5rem;
             line-height: normal;
             letter-spacing: normal;
             color: var(--text-error-color);
@@ -296,34 +361,31 @@
             margin-bottom: 1.75rem;
         }
 
-        & .form-date-cvc-inputs {
+        & .form-date-cvc-flex {
             display: flex;
-            justify-content: space-between;
-            gap: 0.1rem;
+            gap: 0.5rem;
         }
 
-        & .form-date-cvc-uls {
+        & .form-date-cvc-flex div:last-child {
+            flex: 1 0 50%;
             display: flex;
+            flex-direction: column;
         }
 
-        & 
-        .form-date-cvc-uls ul:first-child,
-        .form-date-cvc-uls ul:nth-child(2) {
-            flex: 0 0 23.5%;
+        & .form-date-cvc-flex div:first-child, .form-date-cvc-flex div:nth-child(2) {
+            max-width: 66.8px;
+            display: flex;
+            flex-direction: column;
         }
 
-        & .form-date-cvc-uls ul:last-child {
-            flex: 0 0 53%;
+        & .form-date-cvc-flex div:last-child input {
+            min-width: 80%;
         }
 
         & .form-date-cvc input {
             margin-top: 0.5625rem;
             padding: 0.6875rem 0.875rem 0.6875rem 1rem;
             max-width: 2.2rem;
-        }
-
-        & .form-date-cvc input:last-child {
-            max-width: 9rem;
         }
 
         & .button {
