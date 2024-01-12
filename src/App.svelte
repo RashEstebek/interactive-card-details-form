@@ -51,8 +51,8 @@
 
     <section class="center-cards">
         <picture class="card-gray">
-            <source srcset="./public/desktop/desktop-card-gray.svg" media="(min-width: 75em)">
-            <img src="./public/mobile/mobile-card-gray.svg" alt="Gray card" />
+            <source srcset="/desktop/desktop-card-gray.svg" media="(min-width: 75em)">
+            <img src="/mobile/mobile-card-gray.svg" alt="Gray card" />
         </picture>
 
         <CardFront 
@@ -209,14 +209,14 @@
     .side-background {
         min-height: 15rem;
         background-color: var(----bg-aside-color);
-        background-image: url("../public/mobile/mobile-background-colors.svg");
+        background-image: url("/mobile/mobile-background-colors.svg");
         background-size: cover;
         background-position: center;
 
         @media (min-width: 75em) {
             min-width: 30.1875rem;
             background-color: var(----bg-aside-color);
-            background-image: url("../public/desktop/desktop-background-colors.svg");
+            background-image: url("/desktop/desktop-background-colors.svg");
             background-size: cover;
             background-position: center;
         }
@@ -239,7 +239,7 @@
             padding: 1.125rem;
             min-width: 15.5625rem;
             border-radius: 0.375rem;
-            background: url("../public/mobile/mobile-card-purple-background.svg"), var(--bg-card-color);
+            background: url("/mobile/mobile-card-purple-background.svg"), var(--bg-card-color);
             background-repeat: no-repeat;
             background-position: right;
             color: var(--text-primary-color);
@@ -278,7 +278,7 @@
                 padding: 1.875rem;
                 min-width: 24.1875rem;
                 border-radius: 0.625rem;
-                background: url("../public/desktop/desktop-card-purple-background.svg"), var(--bg-card-color);
+                background: url("/desktop/desktop-card-purple-background.svg"), var(--bg-card-color);
                 background-repeat: no-repeat;
                 background-position: 100% 0%;
             }
