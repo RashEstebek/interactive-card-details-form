@@ -1,5 +1,7 @@
 <script lang="ts">
   import { Motion } from "svelte-motion";
+  import desktopCardPurpleRounds from "/desktop-card-purple-rounds.svg";
+  import mobileCardPurpleRounds from "/mobile-card-purple-rounds.svg";
 
   export let cardNumber: string;
   export let cardName: string;
@@ -23,8 +25,8 @@
   <div class="card-purple" use:motion>
 
     <picture>
-      <source srcset="/desktop-card-purple-rounds.svg" media="(min-width: 75em)">
-      <img src="/mobile-card-purple-rounds.svg" alt="Rounds" />
+      <source srcset={desktopCardPurpleRounds} media="(min-width: 75em)">
+      <img src={mobileCardPurpleRounds} alt="Rounds" />
     </picture>
 
     <p class="card-purple__number">{formatCardNumber(cardNumber || "0000000000000000")}</p>

@@ -1,9 +1,8 @@
 <script lang="ts">
-    import Button from "./lib/Button/index.svelte"
+    import Button from "./lib/Button/index.svelte";
     import Success from "./lib/Success/index.svelte";
     import FormInput from "./lib/FormInput";
-    import CardFront from "./lib/CardFront"
-    import { onMount } from 'svelte';
+    import CardFront from "./lib/CardFront";
 
     import { createForm } from "felte";
     import { validator } from "@felte/validator-zod";
@@ -11,6 +10,13 @@
     import { z } from "zod";
     import { schema } from "./lib/FormInput/Form.schema";
     import { formSubmittedStore, formInputs } from "./lib/store/formStatus";
+
+    import desktopBackgroundColors from '/desktop-background-colors.svg';
+    import desktopCardGray from '/desktop-card-gray.svg';
+    import desktopCardPurpleBackground from '/desktop-card-purple-background.svg';
+    import mobileBackgroundColors from '/mobile-background-colors.svg';
+    import mobileCardGray from '/mobile-card-gray.svg';
+    import mobileCardPurpleBackground from '/mobile-card-purple-background.svg';
 
     let {
         cardholderName,
@@ -51,8 +57,8 @@
 
     <section class="center-cards">
         <picture class="card-gray">
-            <source srcset="/desktop-card-gray.svg" media="(min-width: 75em)">
-            <img src="/mobile-card-gray.svg" alt="Gray card" />
+            <source srcset={desktopCardGray} media="(min-width: 75em)">
+            <img src={mobileCardGray} alt="Gray card" />
         </picture>
 
         <CardFront 
